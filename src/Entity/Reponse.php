@@ -34,6 +34,11 @@ class Reponse
      */
     private $choisirReponses;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Question::class, inversedBy="reponses")
+     */
+    private $question;
+
     public function __construct()
     {
         $this->choisirReponses = new ArrayCollection();
@@ -94,6 +99,18 @@ class Reponse
                 $choisirReponse->setReponse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?Question $question): self
+    {
+        $this->question = $question;
 
         return $this;
     }
