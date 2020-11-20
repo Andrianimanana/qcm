@@ -30,6 +30,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
     private $urlGenerator;
     private $csrfTokenManager;
     private $passwordEncoder;
+    private $user;
 
     public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -73,7 +74,9 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
-
+        //
+        $this->user = $this->user ?? $user;        
+        
         return $user;
     }
 
@@ -95,6 +98,13 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
+        
+        // pas bon mais je le fait quand meme :/ :D 
+        // @toDo: best practice
+        if(in_array("ROLE_ADMIN", $this->user->getRoles()))
+            return new RedirectResponse($this->urlGenerator->generate('admin'));
+         
+
         return new RedirectResponse($this->urlGenerator->generate('qcm_home'));
     }
 
