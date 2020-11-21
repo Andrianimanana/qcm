@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Init\DateInit;
 use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -35,13 +36,26 @@ class Question
     private $dateupdate;
 
     /**
-     * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="question")
+     * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="question", cascade={"remove"})
      */
     private $reponses;
 
+    /**
+     * @ORM\Column(type="integer", options={"default":0})
+     */
+    private $index_question;
+
     public function __construct()
     {
+        
         $this->reponses = new ArrayCollection();
+        $this->init();
+    }
+
+    private function init()
+    {         
+        $this->datecreate   = DateInit::dateNow();
+        $this->dateupdate   = DateInit::dateNow();
     }
 
     public function getId(): ?int
@@ -111,6 +125,18 @@ class Question
                 $reponse->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIndexQuestion(): ?int
+    {
+        return $this->index_question;
+    }
+
+    public function setIndexQuestion(int $index_question): self
+    {
+        $this->index_question = $index_question;
 
         return $this;
     }
