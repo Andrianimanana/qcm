@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\ChoisirReponse;
+use App\Entity\Reponse;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -10,18 +12,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ChoisirReponseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        #$builder
+    { 
+        $reponse    = $options["reponses"];
+        #$question   = $options["question"];
+
+        $builder
+            ->add('reponse', EntityType::class, [
+                'class'         => Reponse::class,
+                'choices'       => $reponse,
+                'choice_label'  => 'libele',
+                'expanded'      => true, // radio bouton 
+            ])            
             #->add('date')
             #->add('user')
-            #->add('reponse')
-        #;
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => ChoisirReponse::class,
+            'data_class'    => ChoisirReponse::class,
+            'reponses'      => Reponse::class,
+            #'question'      => Question::class,
         ]);
     }
 }

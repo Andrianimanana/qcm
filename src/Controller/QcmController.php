@@ -23,7 +23,7 @@ class QcmController extends AbstractController
 	{
 		$this->em = $em;
 	}
-	
+
     /**
      * @Route("/{index_question}", name="qcm_home", requirements={"index_question":"\d+"})
      */
@@ -38,21 +38,25 @@ class QcmController extends AbstractController
     	
     	//
     	if(!$questions->containsKey($index_question))
-    		dd($index_question);
+    		throw $this->createNotFoundException("Question $index_question n'existe pas.");
 
     	//
     	$question 		= $questions->get($index_question); 
     	$reponses 		= $question->getReponses();
-
+ 
         //        
         $choix_reponse 	= new ChoisirReponse();
-	    $form 			= $this->createForm(ChoisirReponseType::class, $choix_reponse);
+	    $form 			= $this->createForm(
+	    	ChoisirReponseType::class, 
+	    	$choix_reponse, [
+	    	"reponses" 	=> $reponses, 
+	    	#"question" 	=> $question
+	    ]);
+
 	    $form->handleRequest($request);
 
-	    if($form->isSubmitted() && $form->isValid()){
-	    	$reponse_choisi = $this->getDoctrine()->getRepository(Reponse::class)->find($request->request->get('reponse'));        	
-	    	$choix_reponse->setDate(DateInit::dateNow());
-	    	$choix_reponse->setReponse($reponse_choisi);
+	    if($form->isSubmitted() && $form->isValid()){         	
+	    	$choix_reponse->setDate(DateInit::dateNow()); 
 	    	$choix_reponse->setUser($this->getUser()); 
 	    	$this->em->persist($choix_reponse);
 	    	$this->em->flush();

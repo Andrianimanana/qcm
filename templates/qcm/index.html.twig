@@ -3,25 +3,12 @@
 {% block title %}QCM!{% endblock %}
 
 {% block body %}
-<style> 
-    li.reponse {list-style: lower-alpha;}
-    .question {}
-    .container{width: 50%;margin: 0 auto;}
-</style>
-
 <div class="container">
     <h1>QCM</h1> 
-    {{ form_start(form) }}
-    <input type="hidden" name="question" value="{{ question.id }}">
-    <p class="question">{{ question.libele }}</p>
-    <ul>
-        {% for reponse in reponses %}
-        	<li class="reponse">
-        		<input type="radio" name="reponse" value="{{reponse.id}}">{{reponse.libele}}
-        	</li>
-        {% endfor %}
-    </ul>
-    <button>Next</button>
+    {{ form_start(form) }} 
+    	<p class="question">{{ question.libele }}</p>
+    	{{ form_widget(form.reponse)}}
+    	<button class="btn btn-primary">Next</button>
     {{ form_end(form) }}
 </div>
 {% endblock %}
