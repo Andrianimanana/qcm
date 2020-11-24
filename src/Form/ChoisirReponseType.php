@@ -21,6 +21,7 @@ class ChoisirReponseType extends AbstractType
                 'class'         => Reponse::class,
                 'choices'       => $reponse,
                 'choice_label'  => 'libele',
+                'required'  => false,
                 'expanded'      => true, // radio bouton 
             ])            
             #->add('date')

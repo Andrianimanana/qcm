@@ -30,7 +30,7 @@ class ChoisirReponse
 
     /**
      * @ORM\ManyToOne(targetEntity=Reponse::class, inversedBy="choisirReponses")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $reponse;
 
