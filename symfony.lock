@@ -99,6 +99,9 @@
     "ocramius/proxy-manager": {
         "version": "2.2.3"
     },
+    "opis/string": {
+        "version": "1.5.0"
+    },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
     },

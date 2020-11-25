@@ -4,11 +4,14 @@
 
 {% block body %}
 <div class="container">
-    <h1>QCM</h1> 
+    <h1 class="text-center">QCM</h1> 
     {{ form_start(form) }} 
-    	<p class="question">{{ question.libele }}</p>
+    	<p class="question font-weight-bold">{{ question.libele }}</p>
     	{{ form_widget(form.reponse)}}
-    	<button class="btn btn-primary">Next</button>
+    	<div class="hidden">
+    		{{form_widget(form.question)}}
+    	</div>
+    	<button class="btn btn-primary float-right">Next</button>
     {{ form_end(form) }}
 </div>
 {% endblock %}

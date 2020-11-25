@@ -12,63 +12,63 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class QcmController extends AbstractController
 { 
     
 	private $em;
+	private $session;
 
-	public function __construct(EntityManagerInterface $em)
+	public function __construct(EntityManagerInterface $em, SessionInterface $session)
 	{
-		$this->em = $em;
+		$this->em 		= $em;
+		$this->session 	= $session;
 	}
 
     /**
-     * @Route("/{index_question}", name="qcm_home", requirements={"index_question":"\d+"})
+     * @Route("/", name="qcm_home")
      */
-    public function index($index_question= 0, Request $request): Response
+    public function index(Request $request): Response
     {         
     	//
     	if(!$this->getUser())
     		return $this->redirectToRoute('app_login');
     	
-    	//
+    	// recupère toutes les questions 
     	$questions 	= new ArrayCollection($this->getDoctrine()->getRepository(Question::class)->findQuestionHaveReponse());
     	
-    	//
-    	if(!$questions->containsKey($index_question))
-    		throw $this->createNotFoundException("Question $index_question n'existe pas.");
-
-    	//
-    	$question 		= $questions->get($index_question); 
+    	$current_question 	= $this->session->get("current_question") ?? 0;
+    	
+    	// end question
+    	if($questions->count() <= $current_question){
+    		$this->session->clear("current_question");// reinitialise question
+    		return $this->render('qcm/final.html.twig');
+    	}
+    	// recupère la question courrante
+    	$question 		= $questions->get($current_question); 
     	$reponses 		= $question->getReponses();
- 
-        //        
+       
         $choix_reponse 	= new ChoisirReponse();
 	    $form 			= $this->createForm(
 	    	ChoisirReponseType::class, 
 	    	$choix_reponse, [
 	    	"reponses" 	=> $reponses, 
-	    	#"question" 	=> $question
+	    	"question" 	=> [$question]
 	    ]);
 
 	    $form->handleRequest($request);
 
 	    if($form->isSubmitted() && $form->isValid()){         	
 	    	$choix_reponse->setDate(DateInit::dateNow()); 
-	    	$choix_reponse->setUser($this->getUser()); 
+	    	$choix_reponse->setUser($this->getUser());  
 	    	$this->em->persist($choix_reponse);
 	    	$this->em->flush();
-			  
-			if($question == $questions->last())
-				return $this->render('qcm/final.html.twig');
-			 
-			$next_question = $questions->key();
+	    	// passé au question suivante
+	    	$this->session->set("current_question", $current_question + 1);
 			
-			return $this->redirectToRoute('qcm_home',[
-				"index_question" => $next_question
-			]);    	
+			return $this->redirectToRoute('qcm_home');    	
 	    }
         
         //

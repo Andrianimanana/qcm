@@ -45,11 +45,17 @@ class Question
      */
     private $index_question;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ChoisirReponse::class, mappedBy="question", orphanRemoval=true)
+     */
+    private $choisirReponses;
+
     public function __construct()
     {
         
         $this->reponses = new ArrayCollection();
         $this->init();
+        $this->choisirReponses = new ArrayCollection();
     }
 
     private function init()
@@ -143,5 +149,35 @@ class Question
     
     public function __toString(){
       return $this->libele;  
+    }
+
+    /**
+     * @return Collection|ChoisirReponse[]
+     */
+    public function getChoisirReponses(): Collection
+    {
+        return $this->choisirReponses;
+    }
+
+    public function addChoisirReponse(ChoisirReponse $choisirReponse): self
+    {
+        if (!$this->choisirReponses->contains($choisirReponse)) {
+            $this->choisirReponses[] = $choisirReponse;
+            $choisirReponse->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChoisirReponse(ChoisirReponse $choisirReponse): self
+    {
+        if ($this->choisirReponses->removeElement($choisirReponse)) {
+            // set the owning side to null (unless already changed)
+            if ($choisirReponse->getQuestion() === $this) {
+                $choisirReponse->setQuestion(null);
+            }
+        }
+
+        return $this;
     }
 }
