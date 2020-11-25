@@ -43,8 +43,14 @@ class QcmController extends AbstractController
     	
     	// end question
     	if($questions->count() <= $current_question){
+			$results = new ArrayCollection($this->getDoctrine()->getRepository(ChoisirReponse::class)->findResults($this->getUser()));
+    		
     		$this->session->clear("current_question");// reinitialise question
-    		return $this->render('qcm/final.html.twig');
+    		
+    		return $this->render('qcm/final.html.twig', [
+    			"results_true" 		=> $results->count(),
+    			"total_questions"  	=> $questions->count()
+    		]);
     	}
     	// recupère la question courrante
     	$question 		= $questions->get($current_question); 

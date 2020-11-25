@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ChoisirReponse;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -36,15 +37,17 @@ class ChoisirReponseRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?ChoisirReponse
+   
+    public function findResults(User $user)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin('c.reponse', 'rep')
+            ->andWhere('c.reponse = rep.id')
+            ->andWhere('rep.is_true = TRUE')
+            ->andWhere('c.user = :iduser')
+            ->setParameter('iduser', $user->getId())
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult() 
         ;
-    }
-    */
+    } 
 }

@@ -1,4 +1,18 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <h1>Fini</h1>
+	{% set condition =  results_true > 1 %}
+    <div class="container">
+    	<div class="row justify-content-center align-items-center">
+    		<div class="col-md-12 mt-5">
+	    		<h1 class="text-center">Fini</h1>
+	    		<p class="text-center">
+	    			<span class="font-weight-bold">
+	    				{{results_true}} / {{total_questions}} 
+	    			</span> 
+    				question{% if condition %}s{% endif %} 
+	    			vrai{% if condition %}s{% endif %}    				
+	    		</p>    			
+    		</div>
+    	</div>
+    </div>
 {% endblock %}
