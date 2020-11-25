@@ -1,6 +1,4 @@
 li.reponse {list-style: lower-alpha;}
 .question {}
 .container{width: 50%;margin: 0 auto;}
-input[type=radio][value=""], input[type=radio][value=""] ~ label {
-    display:none;
-}
+.hidden, input[type=radio][value=""], input[type=radio][value=""] ~ label {display:none;}

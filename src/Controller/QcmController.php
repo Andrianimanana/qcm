@@ -50,14 +50,14 @@ class QcmController extends AbstractController
 	    	ChoisirReponseType::class, 
 	    	$choix_reponse, [
 	    	"reponses" 	=> $reponses, 
-	    	#"question" 	=> $question
+	    	"question" 	=> [$question]
 	    ]);
 
 	    $form->handleRequest($request);
 
 	    if($form->isSubmitted() && $form->isValid()){         	
 	    	$choix_reponse->setDate(DateInit::dateNow()); 
-	    	$choix_reponse->setUser($this->getUser()); 
+	    	$choix_reponse->setUser($this->getUser());  
 	    	$this->em->persist($choix_reponse);
 	    	$this->em->flush();
 			  
