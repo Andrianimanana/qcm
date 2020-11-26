@@ -3,3 +3,7 @@ li.reponse {list-style: lower-alpha;}
 .question {}
 .container{width: 50%;margin: 0 auto;}
 .hidden, input[type=radio][value=""], input[type=radio][value=""] ~ label {display:none;}
+.row{
+	margin-right: 0;
+	margin-left: 0;
+}
