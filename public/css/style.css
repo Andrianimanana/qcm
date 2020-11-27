@@ -1,9 +1,15 @@
 body,html{height:100%;}
 li.reponse {list-style: lower-alpha;}
-.question {}
+.question{list-style: decimal;}
+.reponses li{list-style: lower-alpha;}
 .container{width: 50%;margin: 0 auto;}
 .hidden, input[type=radio][value=""], input[type=radio][value=""] ~ label {display:none;}
 .row{
 	margin-right: 0;
 	margin-left: 0;
+}
+.is_true{color: green;}
+.not_true.reponse_choisie{
+	color: red;
+	text-decoration:line-through;
 }

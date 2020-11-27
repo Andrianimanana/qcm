@@ -21,20 +21,20 @@ class ChoisirReponseRepository extends ServiceEntityRepository
     }
 
     
-    public function getDetailResult(User $user)
-    {
+    // public function getDetailResult(User $user)
+    // {
         
-        return $this->createQueryBuilder('c')
-            ->select('c')
-            ->leftJoin('c.question', 'q')
-            ->leftJoin('c.reponse', 'r')
-            ->leftJoin('c.user', 'u')
-            ->andWhere('u.id = :iduser')
-            ->setParameter('iduser', $user->getId())
-            ->getQuery()
-            ->getResult()
-        ;
-    } 
+    //     return $this->createQueryBuilder('c')
+    //         ->select('c')
+    //         ->leftJoin('c.question', 'q')
+    //         ->leftJoin('c.reponse', 'r')
+    //         ->leftJoin('c.user', 'u')
+    //         ->andWhere('u.id = :iduser')
+    //         ->setParameter('iduser', $user->getId())
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // } 
 
    
     public function findResults(User $user)

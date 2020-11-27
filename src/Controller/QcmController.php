@@ -91,6 +91,14 @@ class QcmController extends AbstractController
      */
     public function getDetailResult(ChoisirReponseRepository $cr)
     {
-            dd($cr->getDetailResult($this->getUser()));
+        //
+        if(!$this->getUser())
+            return $this->redirectToRoute('app_login');
+        
+        $resultats = $cr->findBy(["user"=> $this->getUser()->getId()]);
+        
+        return $this->render('qcm/detail.html.twig', [
+            "resultats" => $resultats,
+        ]);
     }
 }
