@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ChoisirReponse;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +20,33 @@ class ChoisirReponseRepository extends ServiceEntityRepository
         parent::__construct($registry, ChoisirReponse::class);
     }
 
-    // /**
-    //  * @return ChoisirReponse[] Returns an array of ChoisirReponse objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    
+    // public function getDetailResult(User $user)
+    // {
+        
+    //     return $this->createQueryBuilder('c')
+    //         ->select('c')
+    //         ->leftJoin('c.question', 'q')
+    //         ->leftJoin('c.reponse', 'r')
+    //         ->leftJoin('c.user', 'u')
+    //         ->andWhere('u.id = :iduser')
+    //         ->setParameter('iduser', $user->getId())
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // } 
 
-    /*
-    public function findOneBySomeField($value): ?ChoisirReponse
+   
+    public function findResults(User $user)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin('c.reponse', 'rep')
+            ->andWhere('c.reponse = rep.id')
+            ->andWhere('rep.is_true = TRUE')
+            ->andWhere('c.user = :iduser')
+            ->setParameter('iduser', $user->getId())
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult() 
         ;
-    }
-    */
+    } 
 }

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block body %} 
+    <div class="container">
+    	<div class="row justify-content-center align-items-center">
+    		<div class="col-md-12 mt-5">
+	    		<h1 class="text-center">Detail</h1>
+	    		<ul>
+	    			{% for res in resultats %}
+	    			    <li class="question">
+	    			    	<span class="font-weight-bold">{{res.question.libele}}</span>
+		    			    <ul class="reponses">	    			    	 
+		    			    	{% for rep in res.question.reponses %}
+		    			    		{% if rep.istrue %}
+		    			    			{% if res.reponse and res.reponse.id == rep.id %}
+		    			    	    		<li class="is_true reponse_choisie">
+		    			    			{% else %}
+		    			    	    		<li class="is_true">
+		    			    			{% endif %}
+		    			    		{% elseif not rep.istrue %}
+		    			    			{% if res.reponse and res.reponse.id == rep.id %}
+		    			    	    		<li class="not_true reponse_choisie">
+		    			    			{% else %}
+		    			    	    		<li class="not_true">
+		    			    			{% endif %}
+		    			    		{% endif %}
+		    			    	    	{{rep.libele}}
+		    			    	    </li>
+		    			    	{% endfor %}
+		    			    </ul>
+	    			    </li>
+	    			{% endfor %}
+	    		</ul>
+	    		<p class="text-center m-auto">
+	    			<a href="{{ path('qcm_replay')}}" class="btn btn-primary btn-sm">Réjouer</a>
+	    		</p>    			
+    		</div>
+    	</div>
+    </div>
+{% endblock %}

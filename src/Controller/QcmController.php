@@ -7,6 +7,7 @@ use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Form\ChoisirReponseType;
 use App\Init\DateInit;
+use App\Repository\ChoisirReponseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +29,7 @@ class QcmController extends AbstractController
 	}
 
     /**
-     * @Route("/", name="qcm_home")
+     * @Route("/", name="qcm_home") 
      */
     public function index(Request $request): Response
     {         
@@ -43,8 +44,14 @@ class QcmController extends AbstractController
     	
     	// end question
     	if($questions->count() <= $current_question){
+			$results = new ArrayCollection($this->getDoctrine()->getRepository(ChoisirReponse::class)->findResults($this->getUser()));
+    		
     		$this->session->clear("current_question");// reinitialise question
-    		return $this->render('qcm/final.html.twig');
+    		
+    		return $this->render('qcm/final.html.twig', [
+    			"results_true" 		=> $results->count(),
+    			"total_questions"  	=> $questions->count()
+    		]);
     	}
     	// recupère la question courrante
     	$question 		= $questions->get($current_question); 
@@ -77,5 +84,40 @@ class QcmController extends AbstractController
             'question' 	=> $question,
             'form' 		=> $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/result-detail", name="qcm_resultdetail")
+     */
+    public function getDetailResult(ChoisirReponseRepository $cr)
+    {
+        //
+        if(!$this->getUser())
+            return $this->redirectToRoute('app_login');
+
+        $resultats = $cr->findBy(["user"=> $this->getUser()->getId()]);
+        
+        return $this->render('qcm/detail.html.twig', [
+            "resultats" => $resultats,
+        ]);
+    }
+
+    /**
+     *@Route("/replay", name="qcm_replay")
+     */
+    public function replayQcm()
+    {
+        
+        if(!$this->getUser())
+            return $this->redirectToRoute('app_login');
+        
+        $old_user_answers = $this->getDoctrine()->getRepository(ChoisirReponse::class)->findBy(["user" => $this->getUser()->getId()]);
+        
+        foreach ($old_user_answers as $answer)
+             $this->em->remove($answer);  
+       
+        $this->em->flush();
+
+        return $this->redirectToRoute('qcm_home');
     }
 }
