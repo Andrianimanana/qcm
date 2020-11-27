@@ -29,7 +29,7 @@ class QcmController extends AbstractController
 	}
 
     /**
-     * @Route("/", name="qcm_home")
+     * @Route("/", name="qcm_home") 
      */
     public function index(Request $request): Response
     {         
@@ -94,11 +94,30 @@ class QcmController extends AbstractController
         //
         if(!$this->getUser())
             return $this->redirectToRoute('app_login');
-        
+
         $resultats = $cr->findBy(["user"=> $this->getUser()->getId()]);
         
         return $this->render('qcm/detail.html.twig', [
             "resultats" => $resultats,
         ]);
+    }
+
+    /**
+     *@Route("/replay", name="qcm_replay")
+     */
+    public function replayQcm()
+    {
+        
+        if(!$this->getUser())
+            return $this->redirectToRoute('app_login');
+        
+        $old_user_answers = $this->getDoctrine()->getRepository(ChoisirReponse::class)->findBy(["user" => $this->getUser()->getId()]);
+        
+        foreach ($old_user_answers as $answer)
+             $this->em->remove($answer);  
+       
+        $this->em->flush();
+
+        return $this->redirectToRoute('qcm_home');
     }
 }
