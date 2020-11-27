@@ -7,6 +7,7 @@ use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Form\ChoisirReponseType;
 use App\Init\DateInit;
+use App\Repository\ChoisirReponseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -83,5 +84,13 @@ class QcmController extends AbstractController
             'question' 	=> $question,
             'form' 		=> $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/result-detail", name="qcm_resultdetail")
+     */
+    public function getDetailResult(ChoisirReponseRepository $cr)
+    {
+            dd($cr->getDetailResult($this->getUser()));
     }
 }

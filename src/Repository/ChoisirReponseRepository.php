@@ -20,22 +20,21 @@ class ChoisirReponseRepository extends ServiceEntityRepository
         parent::__construct($registry, ChoisirReponse::class);
     }
 
-    // /**
-    //  * @return ChoisirReponse[] Returns an array of ChoisirReponse objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function getDetailResult(User $user)
     {
+        
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('c')
+            ->leftJoin('c.question', 'q')
+            ->leftJoin('c.reponse', 'r')
+            ->leftJoin('c.user', 'u')
+            ->andWhere('u.id = :iduser')
+            ->setParameter('iduser', $user->getId())
             ->getQuery()
             ->getResult()
         ;
-    }
-    */
+    } 
 
    
     public function findResults(User $user)
