@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Category;
 use App\Entity\Question;
 use App\Entity\Reponse;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -33,6 +34,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::section('Mise à jour'),
                 MenuItem::linkToCrud('Question', 'far fa-question-circle', Question::class),
                 MenuItem::linkToCrud('Reponse', 'fab fa-replyd', Reponse::class),
+                MenuItem::linkToCrud('Categorie', 'fa fa-list-alt', Category::class),
         ];
     }
 }
