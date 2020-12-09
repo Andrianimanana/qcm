@@ -13,3 +13,6 @@ li.reponse {list-style: lower-alpha;}
 	color: red;
 	text-decoration:line-through;
 }
+.ds-block{
+	display: block;
+}

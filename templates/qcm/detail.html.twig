@@ -7,7 +7,7 @@
 	    		<h1 class="text-center">Detail</h1>
 	    		{% if not resultats %}
 					<div class="alert alert-danger text-center" role="alert">
-					  Pas de detail à afficher, cliquer sur <a href="{{path('qcm_home')}}" class="alert-link">ici</a> pour jouer au QCM :)
+					  Pas de detail à afficher, cliquer sur <a href="{{path('qcm_question')}}" class="alert-link">ici</a> pour jouer au QCM :)
 					</div>
 	    		{% else %}
 		    		<ul>
@@ -37,7 +37,7 @@
 		    			{% endfor %}
 		    		</ul>
 		    		<p class="text-center m-auto">
-		    			<a href="{{ path('qcm_replay')}}" class="btn btn-primary btn-sm">Réjouer</a>
+		    			<a href="{{ path('qcm_replay',{libele:category.libele})}}" class="btn btn-primary btn-sm">Réjouer</a>
 		    		</p>
 	    		{% endif %}   			
     		</div>
