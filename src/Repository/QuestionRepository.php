@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,15 +20,16 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
-    // /**
-    //  * @return Question[] Returns an array of Question objects
-    //  */
     
-    public function findQuestionHaveReponse()
+    public function findQuestionHaveReponse(Category $category)
     {
         return $this->createQueryBuilder('q')
             ->leftJoin('q.reponses', 're')
+            ->leftJoin('q.category', 'ca')
             ->andWhere('q.id = re.question') 
+            ->andWhere('q.category = ca.id') 
+            ->andWhere('q.category = :category') 
+            ->setParameter('category', $category)
             ->orderBy('q.index_question', 'ASC') 
             ->getQuery()
             ->getResult()

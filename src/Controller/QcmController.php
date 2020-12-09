@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\ChoisirReponse;
 use App\Entity\Question;
 use App\Entity\Reponse;
 use App\Form\ChoisirReponseType;
+use App\Init\QcmCollection;
 use App\Init\DateInit;
-use App\Repository\ChoisirReponseRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\ChoisirReponseRepository; 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,28 +30,41 @@ class QcmController extends AbstractController
 	}
 
     /**
-     * @Route("/", name="qcm_home") 
+     * @Route("/", name="qcm_index")
      */
-    public function index(Request $request): Response
+    public function index(){
+       
+       $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+       
+
+       return $this->render("qcm/index.html.twig", [
+            "categories" => $categories
+       ]); 
+    }
+    /**
+     * @Route("/qcm/cat-{libele}", name="qcm_question") 
+     */
+    public function qcm_question(Category $category, Request $request): Response
     {         
     	//
     	if(!$this->getUser())
     		return $this->redirectToRoute('app_login');
-    	
+        
     	// recupère toutes les questions 
-    	$questions 	= new ArrayCollection($this->getDoctrine()->getRepository(Question::class)->findQuestionHaveReponse());
+    	$questions 	= QcmCollection::_init($this->getDoctrine()->getRepository(Question::class)->findQuestionHaveReponse($category));
     	
     	$current_question 	= $this->session->get("current_question") ?? 0;
     	
     	// end question
     	if($questions->count() <= $current_question){
-			$results = new ArrayCollection($this->getDoctrine()->getRepository(ChoisirReponse::class)->findResults($this->getUser()));
+			$results = QcmCollection::_init($this->getDoctrine()->getRepository(ChoisirReponse::class)->findResults($this->getUser()));
     		
     		$this->session->clear("current_question");// reinitialise question
     		
     		return $this->render('qcm/final.html.twig', [
     			"results_true" 		=> $results->count(),
-    			"total_questions"  	=> $questions->count()
+    			"total_questions"  	=> $questions->count(),
+                "category"          => $category,
     		]);
     	}
     	// recupère la question courrante
@@ -75,11 +89,11 @@ class QcmController extends AbstractController
 	    	// passé au question suivante
 	    	$this->session->set("current_question", $current_question + 1);
 			
-			return $this->redirectToRoute('qcm_home');    	
+			return $this->redirectToRoute('qcm_question', ['libele' => $category->getLibele()]);    	
 	    }
         
         //
-        return $this->render('qcm/index.html.twig', [
+        return $this->render('qcm/question.html.twig', [
             'reponses' 	=> $reponses,
             'question' 	=> $question,
             'form' 		=> $form->createView()
@@ -87,9 +101,9 @@ class QcmController extends AbstractController
     }
 
     /**
-     * @Route("/result-detail", name="qcm_resultdetail")
+     * @Route("/result-detail/cat-{libele}", name="qcm_resultdetail")
      */
-    public function getDetailResult(ChoisirReponseRepository $cr)
+    public function getDetailResult(ChoisirReponseRepository $cr, Category $category)
     {
         //
         if(!$this->getUser())
@@ -99,13 +113,14 @@ class QcmController extends AbstractController
         
         return $this->render('qcm/detail.html.twig', [
             "resultats" => $resultats,
+            'category'  => $category,
         ]);
     }
 
     /**
-     *@Route("/replay", name="qcm_replay")
+     *@Route("/replay/cat-{libele}", name="qcm_replay")
      */
-    public function replayQcm()
+    public function replayQcm(Category $category)
     {
         
         if(!$this->getUser())
@@ -118,6 +133,6 @@ class QcmController extends AbstractController
        
         $this->em->flush();
 
-        return $this->redirectToRoute('qcm_home');
+        return $this->redirectToRoute('qcm_question', ['libele'=>$category->getLibele()]);
     }
 }

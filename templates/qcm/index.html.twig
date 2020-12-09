@@ -1,21 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}QCM!{% endblock %}
-
 {% block body %}
-<div class="container">
-    <div class="row">
-    	<div class="col-md-12 mt-5">
-    		<h1 class="text-center">QCM</h1> 
-    		{{ form_start(form) }} 
-    			<p class="question font-weight-bold">{{ question.libele }}</p>
-    			{{ form_widget(form.reponse)}}
-    			<div class="hidden">
-    				{{form_widget(form.question)}}
-    			</div>
-    			<button class="btn btn-primary float-right">Next</button>
-    		{{ form_end(form) }}
-    	</div>
-    </div>
+<div class="container pt-5">
+	<div class="row">
+		<div class="col-md-6 col-auto">
+			{% for category in categories %}
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title text-center">{{category.libele}}</h5>
+					<a href="{{path('qcm_question',{libele:category.libele})}}" class="btn btn-primary btn-sm m-auto w-50 ds-block">Jouer</a>
+				</div>
+			</div>    
+			{% endfor %}    
+		</div>
+	</div>
 </div>
 {% endblock %}
