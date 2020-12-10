@@ -105,7 +105,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             return new RedirectResponse($this->urlGenerator->generate('admin'));
          
 
-        return new RedirectResponse($this->urlGenerator->generate('qcm_question'));
+        return new RedirectResponse($this->urlGenerator->generate('qcm_index'));
     }
 
     protected function getLoginUrl()
