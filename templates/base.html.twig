@@ -11,6 +11,10 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            <script src="{{ asset('js/jquery.min.js') }}"></script>
+            <script src="{{ asset('js/easytimer.min.js') }}"></script>
+            <script src="{{ asset('js/scripts.js') }}"></script>
+        {% endblock %}
     </body>
 </html>
