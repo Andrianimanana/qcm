@@ -6,8 +6,11 @@
 <div class="container">
     <div class="row">
     	<div class="col-md-12 mt-5">
+            <div id="_question_countdown" class="row justify-content-center border rounded-pill p-1 rounded">
+            </div>
     		<h1 class="text-center">QCM</h1> 
     		{{ form_start(form) }} 
+            <input type="hidden" name="countdown" id="countdown" value="{{question.countdown}}">
     			<p class="question font-weight-bold">{{ question.libele }}</p>
     			{{ form_widget(form.reponse)}}
     			<div class="hidden">

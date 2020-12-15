@@ -16,3 +16,7 @@ li.reponse {list-style: lower-alpha;}
 .ds-block{
 	display: block;
 }
+
+._question_countdown.bg-danger{
+	transition: opacity .2s linear;
+}

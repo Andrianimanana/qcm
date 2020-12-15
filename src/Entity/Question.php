@@ -1,8 +1,15 @@
 <?php
 
+/**
+ * @Author: Armel Andrianimanana
+ * @Date:   2020-11-23 12:33:12
+ * @Last Modified by:   Armel
+ * @Last Modified time: 2020-12-15 13:50:28
+ */
 namespace App\Entity;
 
 use App\Init\DateInit;
+use App\Init\InitValue;
 use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -54,6 +61,11 @@ class Question
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="questions")
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $countdown;
 
     public function __construct()
     {
@@ -194,6 +206,18 @@ class Question
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getCountdown(): ?float
+    {
+        return $this->countdown?:InitValue::COUNT_DOWN_QUESTION;
+    }
+
+    public function setCountdown(?float $countdown): self
+    {
+        $this->countdown = $countdown?:InitValue::COUNT_DOWN_QUESTION;
 
         return $this;
     }
