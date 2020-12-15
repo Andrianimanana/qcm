@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @Author: Armel Andrianimanana
+ * @Date:   2020-11-23 12:34:02
+ * @Last Modified by:   Armel
+ * @Last Modified time: 2020-12-15 13:50:51
+ */
 namespace App\Controller;
 
 use App\Entity\Category;
@@ -49,17 +55,33 @@ class QcmController extends AbstractController
     	//
     	if(!$this->getUser())
     		return $this->redirectToRoute('app_login');
-        
-    	// recupère toutes les questions 
+            	
+        // recupère toutes les questions 
     	$questions 	= QcmCollection::_init($this->getDoctrine()->getRepository(Question::class)->findQuestionHaveReponse($category));
+        $nbquestion = $questions->count();
+
+        if(!$nbquestion)
+            return $this->redirectToRoute('qcm_index');
     	
-    	$current_question 	= $this->session->get("current_question") ?? 0;
-    	
-    	// end question
-    	if($questions->count() <= $current_question){
-			$results = QcmCollection::_init($this->getDoctrine()->getRepository(ChoisirReponse::class)->findResults($this->getUser()));
-    		
-    		$this->session->clear("current_question");// reinitialise question
+        // recupère la derniere question qui à été repondu par un user
+        $last_reponse_choice   = $this->getDoctrine()->getRepository(ChoisirReponse::class)->findLastReponse($this->getUser(), $category);
+        
+        $question = NULL;
+
+        if( $last_reponse_choice && $questions->contains($last_reponse_choice->getQuestion()) ){
+    	       
+            $key        = \array_search($last_reponse_choice->getQuestion(), $questions->toArray(), true); 
+            $question 	= $questions->containsKey($key+1) ? $questions->get($key+1) : NULL; 
+
+        }else{
+            $question   = $questions->first();
+            $key        = \array_search($question, $questions->toArray(), true);
+        }
+
+    	// dernier question
+    	if(!$question && !(($nbquestion-1)-$key) ){
+			
+            $results = QcmCollection::_init($this->getDoctrine()->getRepository(ChoisirReponse::class)->findResults($this->getUser())); 
     		
     		return $this->render('qcm/final.html.twig', [
     			"results_true" 		=> $results->count(),
@@ -67,10 +89,9 @@ class QcmController extends AbstractController
                 "category"          => $category,
     		]);
     	}
-    	// recupère la question courrante
-    	$question 		= $questions->get($current_question); 
-    	$reponses 		= $question->getReponses();
-       
+
+    	// recupère toutes les réponses possible d'une question
+    	$reponses 		= $question->getReponses();       
         $choix_reponse 	= new ChoisirReponse();
 	    $form 			= $this->createForm(
 	    	ChoisirReponseType::class, 
@@ -85,11 +106,8 @@ class QcmController extends AbstractController
 	    	$choix_reponse->setDate(DateInit::dateNow()); 
 	    	$choix_reponse->setUser($this->getUser());  
 	    	$this->em->persist($choix_reponse);
-	    	$this->em->flush();
-	    	// passé au question suivante
-	    	$this->session->set("current_question", $current_question + 1);
-			
-			return $this->redirectToRoute('qcm_question', ['libele' => $category->getLibele()]);    	
+	    	$this->em->flush(); 			
+			return $this->redirectToRoute('qcm_question', ['libele' => $category->getLibele()]);   	
 	    }
         
         //

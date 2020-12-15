@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @Author: Armel Andrianimanana
+ * @Date:   2020-11-23 12:33:12
+ * @Last Modified by:   Armel
+ * @Last Modified time: 2020-12-15 13:50:28
+ */
 namespace App\Entity;
 
 use App\Init\DateInit;
