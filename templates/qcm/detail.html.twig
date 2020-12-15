@@ -7,7 +7,7 @@
 	    		<h1 class="text-center">Detail</h1>
 	    		{% if not resultats %}
 					<div class="alert alert-danger text-center" role="alert">
-					  Pas de detail à afficher, cliquer sur <a href="{{path('qcm_question',{libele:category.libele})}}" class="alert-link">ici</a> pour jouer au QCM :)
+					  Pas de detail à afficher, cliquer sur <a href="{{path('qcm_index')}}" class="alert-link">ici</a> pour jouer au QCM :)
 					</div>
 	    		{% else %}
 		    		<ul>
