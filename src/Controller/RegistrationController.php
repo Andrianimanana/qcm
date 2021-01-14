@@ -40,7 +40,7 @@ class RegistrationController extends AbstractController
             $event      = new UserRegistrationEvent($user); 
             $eventDispatcher->dispatch($event, UserRegistrationEvent::NAME);
             
-            return $this->redirectToRoute('qcm_question');
+            return $this->redirectToRoute('qcm_index');
         }
 
         return $this->render('registration/register.html.twig', [

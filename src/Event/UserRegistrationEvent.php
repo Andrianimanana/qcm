@@ -1,10 +1,8 @@
 <?php
 
+
 /**
- * @Author: Armel Andrianimanana
- * @Date:   2021-01-11 15:21:50
- * @Last Modified by:   Armel
- * @Last Modified time: 2021-01-11 15:43:55
+ * @Author: Armel <arbandry@gmail.com>
  */
 
 namespace App\Event;

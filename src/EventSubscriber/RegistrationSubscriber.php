@@ -1,12 +1,10 @@
 <?php
 
 /**
- * @Author: Armel Andrianimanana
- * @Date:   2021-01-11 14:07:33
- * @Last Modified by:   Armel
- * @Last Modified time: 2021-01-11 15:43:38
+ * @Author: Armel <arbandry@gmail.com>
  */
-namespace App\EventSubscriber;
+
+namespace App\EventSubscriber; 
 
 use App\Entity\User;
 use App\Event\UserRegistrationEvent;
@@ -18,17 +16,18 @@ use Symfony\Component\Mime\Email;
 class RegistrationSubscriber implements EventSubscriberInterface
 {
     private $mailer;
-    
-    public function __construct(MailerInterface $mailer){
-        $this->mailer = $mailer;
+    private $admin_email;
+    public function __construct(MailerInterface $mailer, $admin_email){
+        $this->mailer       = $mailer;
+        $this->admin_email  = $admin_email;
     }
 
     public function onSendMailRegistration(UserRegistrationEvent $userEvent)//
     {
        $user    = $userEvent->getUser();
        $email   = (new Email())
-            ->from('arbandry@gmail.com')
-            ->to('arbandry@gmail.com')
+            ->from($user->getEmail())
+            ->to($this->admin_email)
             ->subject('Utilisateur : <'.$user->getEmail().'>')
             ->html('<h1>Nouveau utilisateur :'.$user->getEmail().' </h1>');
         $this->mailer->send($email);
