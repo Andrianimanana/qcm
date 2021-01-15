@@ -25,7 +25,7 @@ class RegistrationSubscriber implements EventSubscriberInterface
     public function onSendMailRegistration(UserRegistrationEvent $userEvent)//
     {
        $user    = $userEvent->getUser();
-       $message = (new \Swift_Message('Hello Email'))
+       $message = (new \Swift_Message('NOUVEAU UTILISATEUR <'.$user->getEmail().'>'))
            ->setFrom($user->getEmail())
            ->setTo($this->admin_email)
            ->setBody(
