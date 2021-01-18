@@ -36,15 +36,16 @@ class QuestionRepository extends ServiceEntityRepository
         ;
     } 
 
-    /*
-    public function findOneBySomeField($value): ?Question
+    
+    public function findMaxIndexQuestion(Question $question)
     {
         return $this->createQueryBuilder('q')
-            ->andWhere('q.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('MAX(q.index_question)')
+            ->andWhere('q.category = :category')
+            ->setParameter('category', $question->getCategory())
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+    
 }

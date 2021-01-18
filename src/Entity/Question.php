@@ -154,7 +154,7 @@ class Question
 
     public function getIndexQuestion(): ?int
     {
-        return $this->index_question;
+        return $this->index_question?:0;
     }
 
     public function setIndexQuestion(int $index_question): self
