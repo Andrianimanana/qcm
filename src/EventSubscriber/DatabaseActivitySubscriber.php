@@ -13,11 +13,11 @@ class DatabaseActivitySubscriber implements EventSubscriber
     public  function getSubscribedEvents()
     {
         return [
-            Events::postPersist,
+            Events::prePersist,
         ];
     }
 
-    public function postPersist(LifecycleEventArgs $args)
+    public function prePersist(LifecycleEventArgs $args)
     {
         $entity     =  $args->getObject();
         $em         =  $args->getObjectManager();
@@ -25,7 +25,7 @@ class DatabaseActivitySubscriber implements EventSubscriber
         if($entity instanceof Question ){
             $max    =  $em->getRepository(Question::class)->findMaxIndexQuestion($entity);
             $entity->setIndexQuestion( intval(max($max)) + 1 );
-            $em->flush();
+            //$em->flush();
         }
     }
 }
