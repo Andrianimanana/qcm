@@ -1,0 +1,7 @@
+# config/packages/easy_admin.yaml
+# easy_admin:
+#     entities:
+#         Customer:
+#             class: App\Entity\Question
+#             list:
+#                 fields: ['id', 'libele', 'index_question', 'countdown', 'category']
